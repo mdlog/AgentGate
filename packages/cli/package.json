@@ -1,5 +1,5 @@
 {
-  "name": "@agentgate/cli",
+  "name": "@mdlog/agentgate",
   "version": "0.1.0",
   "private": true,
   "type": "module",

@@ -14,7 +14,7 @@ import { rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { createChainClient } from '@agentgate/chain';
-import { createDemoAccounts, wrapService } from '@agentgate/cli';
+import { createDemoAccounts, wrapService } from '@mdlog/agentgate';
 import { MockLlm, runBuyerAgent } from '@agentgate/buyer-agent';
 import { startServer as startDevnet } from '@agentgate/devnet';
 import { startServer as startMiddleware } from '@agentgate/middleware';
