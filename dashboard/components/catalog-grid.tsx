@@ -13,7 +13,7 @@ import { ChainDownBanner, EmptyState, ErrorState, Skeleton } from '@/components/
 import { LiveDot } from '@/components/live-dot';
 
 const WRAP_CMD =
-  'npx @mdlog/agentgate wrap https://api.example.com/gold --price 0.5 --name "Gold Spot Feed" --pem ./seller.pem --gateway https://your-gateway';
+  'npx @mdlog/agentgate wrap https://api.example.com/gold --price 0.5 --name "Gold Spot Feed" --pem ./key.pem';
 
 type View = 'grid' | 'list';
 const VIEW_KEY = 'agentgate:catalog-view';
