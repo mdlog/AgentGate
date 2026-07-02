@@ -283,14 +283,14 @@ export default function Page() {
       <H3 id="wrap-example">Example</H3>
       <CommandBlock
         wrap
-        text='npx @mdlog/agentgate wrap https://api.example.com/gold --price 0.5 --name "Gold Spot Feed" --pem ./key.pem'
+        text='npx @mdlog/agentgate wrap https://api.example.com/gold --price 2.5 --name "Gold Spot Feed" --pem ./key.pem'
       />
       <CodeBlock
         label="output"
         code={[
-          'service id:      1',
-          'public endpoint: https://gateway.mdloglabs.org/svc/1',
-          'dashboard:       https://agentgate.mdloglabs.org/services/1',
+          'service id:      5',
+          'public endpoint: https://gateway.mdloglabs.org/svc/5',
+          'dashboard:       https://agentgate.mdloglabs.org/services/5',
           'register tx:     <txHash>',
         ].join('\n')}
       />
@@ -420,12 +420,12 @@ export default function Page() {
         settle on this rail — target services priced ≥ 2.5 CSPR.
       </P>
       <H3 id="buy-example">Example</H3>
-      <CommandBlock wrap text="npx @mdlog/agentgate buy 1 --pem ./buyer.pem --max 5 --gateway https://gateway.mdloglabs.org" />
+      <CommandBlock wrap text="npx @mdlog/agentgate buy 5 --pem ./buyer.pem --max 3" />
       <CodeBlock
         label="stderr (payment metadata) — the response body arrives on stdout"
         code={[
-          'service:  #1 RWA FX & Gold Oracle',
-          'url:      https://gateway.mdloglabs.org/svc/1',
+          'service:  #5 RWA FX & Gold Oracle',
+          'url:      https://gateway.mdloglabs.org/svc/5',
           'paid:     2.5 CSPR',
           'payment:  <deployHash>',
           'explorer: https://testnet.cspr.live/transaction/<deployHash>',
