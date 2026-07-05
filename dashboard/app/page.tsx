@@ -2,16 +2,16 @@ import Link from 'next/link';
 import { StatsStrip } from '@/components/stats-strip';
 import { CommandBlock } from '@/components/copy';
 
-const LIST_CMD = 'npx @mdlog/agentgate list';
+const LIST_CMD = 'npx @mdlog/agentgate@latest list';
 const WRAP_CMD =
-  'npx @mdlog/agentgate wrap https://api.example.com/gold --price 0.5 --name "Gold Spot Feed" --pem ./key.pem';
+  'npx @mdlog/agentgate@latest wrap https://api.example.com/gold --price 2.5 --name "Gold Spot Feed" --pem ./key.pem';
 
 const STEPS = [
   {
     n: '01',
     title: 'Wrap',
     body: 'One command registers your API on the Casper registry contract and drops a 402 paywall in front of it. No billing code, no accounts, no keys to issue.',
-    code: 'npx @mdlog/agentgate wrap <url> --price 0.5 --pem ./key.pem',
+    code: 'npx @mdlog/agentgate@latest wrap <url> --price 2.5 --pem ./key.pem',
   },
   {
     n: '02',

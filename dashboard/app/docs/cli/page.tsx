@@ -33,7 +33,7 @@ export default function Page() {
       {/* ───────────────────────────── invocation ───────────────────────────── */}
       <H2 id="invocation">Invocation</H2>
       <P>The published CLI runs with <M>npx</M> — no install, no clone:</P>
-      <CommandBlock text="npx @mdlog/agentgate <command> [args] [options]" />
+      <CommandBlock text="npx @mdlog/agentgate@latest <command> [args] [options]" />
       <P>
         From a cloned repo you can run it through the workspace script instead (everything after the{' '}
         <M>--</M> is forwarded verbatim to the <M>agentgate</M> binary), or invoke the binary
@@ -226,7 +226,7 @@ export default function Page() {
       </P>
       <CommandBlock
         wrap
-        text='npx @mdlog/agentgate wrap <upstreamUrl> --price <cspr> --name <name> --pem <path> [options]'
+        text='npx @mdlog/agentgate@latest wrap <upstreamUrl> --price <cspr> --name <name> --pem <path> [options]'
       />
       <DocTable
         head={['Flag / arg', 'Required', 'Default', 'Meaning']}
@@ -283,7 +283,7 @@ export default function Page() {
       <H3 id="wrap-example">Example</H3>
       <CommandBlock
         wrap
-        text='npx @mdlog/agentgate wrap https://api.example.com/gold --price 2.5 --name "Gold Spot Feed" --pem ./key.pem'
+        text='npx @mdlog/agentgate@latest wrap https://api.example.com/gold --price 2.5 --name "Gold Spot Feed" --pem ./key.pem'
       />
       <CodeBlock
         label="output"
@@ -330,7 +330,7 @@ export default function Page() {
         <DocLink href="#config-flags">config flags</DocLink> (<M>--mode</M>, <M>--node-url</M>,{' '}
         <M>--registry</M>) still apply.
       </P>
-      <CommandBlock text="npx @mdlog/agentgate list" />
+      <CommandBlock text="npx @mdlog/agentgate@latest list" />
       <CodeBlock
         label="output (illustrative — your table shows the live catalog)"
         code={[
@@ -368,7 +368,7 @@ export default function Page() {
       </P>
       <CommandBlock
         wrap
-        text="npx @mdlog/agentgate buy <id> --pem <path> [--max <cspr>] [--method <m>] [--body <json>] [--gateway <url>]"
+        text="npx @mdlog/agentgate@latest buy <id> --pem <path> [--max <cspr>] [--method <m>] [--body <json>] [--gateway <url>]"
       />
       <DocTable
         head={['Flag / arg', 'Required', 'Default', 'Meaning']}
@@ -420,7 +420,7 @@ export default function Page() {
         settle on this rail — target services priced ≥ 2.5 CSPR.
       </P>
       <H3 id="buy-example">Example</H3>
-      <CommandBlock wrap text="npx @mdlog/agentgate buy 5 --pem ./buyer.pem --max 3" />
+      <CommandBlock wrap text="npx @mdlog/agentgate@latest buy 5 --pem ./buyer.pem --max 3" />
       <CodeBlock
         label="stderr (payment metadata) — the response body arrives on stdout"
         code={[
@@ -448,7 +448,7 @@ export default function Page() {
         Show one service in depth: the full record, its score, trust tier and recent
         attestations.
       </P>
-      <CommandBlock text="npx @mdlog/agentgate status <id> [--api-key <key>]" />
+      <CommandBlock text="npx @mdlog/agentgate@latest status <id> [--api-key <key>]" />
       <DocTable
         head={['Argument / flag', 'Required', 'Rule']}
         rows={[
@@ -512,7 +512,7 @@ export default function Page() {
         and prints the new state. While paused the gateway answers 403 on{' '}
         <M>/svc/&lt;id&gt;</M> and the catalog shows it as inactive. The score is untouched.
       </P>
-      <CommandBlock text="npx @mdlog/agentgate pause <id> --pem <path>" />
+      <CommandBlock text="npx @mdlog/agentgate@latest pause <id> --pem <path>" />
       <DocTable
         head={['Argument', 'Required', 'Rule']}
         rows={[
@@ -545,7 +545,7 @@ export default function Page() {
         Same argument rules, owner-only check and signer resolution as <M>pause</M>. Calls flow
         through the paywall again and discovery shows the service on the next catalog read.
       </P>
-      <CommandBlock text="npx @mdlog/agentgate resume <id> --pem <path>" />
+      <CommandBlock text="npx @mdlog/agentgate@latest resume <id> --pem <path>" />
       <DocTable
         head={['Argument', 'Required', 'Rule']}
         rows={[
@@ -575,7 +575,7 @@ export default function Page() {
         <M>POST &lt;DEVNET_URL&gt;/faucet</M>, so it needs a local mock devnet running
         (<M>npm run dev</M>). Since the CLI defaults to <M>live</M>, pass <M>--mode mock</M>.
       </P>
-      <CommandBlock text="npx @mdlog/agentgate demo-accounts --mode mock" />
+      <CommandBlock text="npx @mdlog/agentgate@latest demo-accounts --mode mock" />
       <CodeBlock
         label="output"
         code={[

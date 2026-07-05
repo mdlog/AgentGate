@@ -433,7 +433,7 @@ export default function Page() {
         token-free path is <M>POST /services/:id/map</M>: the service <em>owner</em> proves control
         by signing a canonical challenge with the key whose account-hash equals the on-chain{' '}
         <M>owner</M> — no shared admin token. This is exactly what{' '}
-        <M>npx @mdlog/agentgate wrap &lt;url&gt; --pem ./key.pem</M> does against the hosted gateway.
+        <M>npx @mdlog/agentgate@latest wrap &lt;url&gt; --pem ./key.pem</M> does against the hosted gateway.
         The <M>/services/*</M> path is rate-limited to 20 requests per minute per IP.
       </P>
       <PropList

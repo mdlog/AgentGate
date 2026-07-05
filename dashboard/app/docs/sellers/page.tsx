@@ -126,7 +126,7 @@ export default function Page() {
       <CommandBlock
         wrap
         text={
-          'npx @mdlog/agentgate wrap https://api.example.com/gold ' +
+          'npx @mdlog/agentgate@latest wrap https://api.example.com/gold ' +
           '--price 2.5 --name "Gold Spot Feed" --pem ./key.pem ' +
           '--description "Live gold spot price, refreshed every 10s"'
         }
@@ -279,7 +279,7 @@ export default function Page() {
       <P>
         Then confirm the registration transaction on the explorer at{' '}
         <M>https://testnet.cspr.live/transaction/&lt;txHash&gt;</M> and read the record back
-        from the chain with <M>npx @mdlog/agentgate status 1</M> (substitute the id wrap
+        from the chain with <M>npx @mdlog/agentgate@latest status 1</M> (substitute the id wrap
         printed).
       </P>
 
@@ -363,10 +363,10 @@ export default function Page() {
           ],
         ]}
       />
-      <CommandBlock text="npx @mdlog/agentgate list" />
-      <CommandBlock text="npx @mdlog/agentgate status 1" />
-      <CommandBlock text="npx @mdlog/agentgate pause 1 --pem ./key.pem" />
-      <CommandBlock text="npx @mdlog/agentgate resume 1 --pem ./key.pem" />
+      <CommandBlock text="npx @mdlog/agentgate@latest list" />
+      <CommandBlock text="npx @mdlog/agentgate@latest status 1" />
+      <CommandBlock text="npx @mdlog/agentgate@latest pause 1 --pem ./key.pem" />
+      <CommandBlock text="npx @mdlog/agentgate@latest resume 1 --pem ./key.pem" />
       <P>
         <M>pause</M> and <M>resume</M> re-fetch the record and print the service, its new active
         state and the <M>set_active</M> tx hash. Full reference in{' '}
