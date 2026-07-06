@@ -26,7 +26,7 @@ Buy one call to any listed service the same way — the CLI pays the 402 invoice
 the data (body → stdout, payment receipt → stderr):
 
 ```bash
-npx @mdlog/agentgate buy 1 --pem ./buyer.pem --max 5
+npx @mdlog/agentgate buy 5 --pem ./buyer.pem --max 5
 ```
 
 `wrap` registers on-chain (signed by `--pem`) and maps your upstream on the gateway by
