@@ -16,12 +16,65 @@ export default function Page() {
         lede="Notable changes to AgentGate — the CLI, gateway, smart contracts and docs — newest first."
       />
 
+      <H2 id="2026-07-23-v021">2026-07-23 — CLI v0.2.1: wrap registers with accepts[]</H2>
+      <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-mut">
+        <li>
+          <strong className="text-white">Fix: live wrap on registry v2.</strong>{' '}
+          <M>agentgate wrap</M> now sends the v2 <M>accepts[]</M> argument (one native-CSPR option
+          from <M>--price</M>) instead of the removed v1 <M>price</M> arg — registering against the
+          v2 contract failed in 0.2.0. String args are guarded to printable ASCII (see the SDK
+          CLString bug below); the encoding is unit-tested byte-for-byte against the
+          on-chain-proven bytes.
+        </li>
+      </ul>
+
+      <H2 id="2026-07-23-v020">2026-07-23 — CLI v0.2.0: registry v2, multi-asset accepts[] on-chain</H2>
+      <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-mut">
+        <li>
+          <strong className="text-white">Registry v2 (on-chain accepts[]).</strong> Services now
+          store a <M>{'Vec<PaymentOption>'}</M> on-chain — per-asset price list (native CSPR and/or
+          CEP-18 tokens with their EIP-712 domain) instead of a single native price. New unlocked
+          (upgradable) package{' '}
+          <M>hash-e09869a12ffcdbf58f53b3c7119b168beca5385a3f538415384a9ec80b9bf8df</M>; the legacy
+          locked v1 package stays on-chain as the rollback target and readers still decode its
+          layout.
+        </li>
+        <li>
+          <strong className="text-white">402 derived from chain.</strong> The gateway now derives the
+          facilitator (WCSPR) rail from the service&apos;s on-chain <M>accepts[]</M> —{' '}
+          <M>FACILITATOR_SERVICES</M> becomes an optional operator override instead of the source of
+          truth. The catalog renders per-asset prices read from the contract.
+        </li>
+        <li>
+          <strong className="text-white">CLI default registry → v2.</strong>{' '}
+          <M>REGISTRY_CONTRACT_PACKAGE_HASH</M> now defaults to the v2 package, and the service
+          parser understands both layouts (v2 first, v1 fallback).
+        </li>
+        <li>
+          <strong className="text-white">Fix: non-ASCII args revert (SDK).</strong> casper-js-sdk
+          5.0.12 encodes a CLString&apos;s length prefix as UTF-16 units while the payload is UTF-8 —
+          any non-ASCII char (an em dash, say) makes stored calls revert with Odra{' '}
+          <M>LeftOverBytes</M> (user error 64649). On-chain writers now guard string args to ASCII.
+        </li>
+      </ul>
+
+      <H2 id="2026-07-19-wcspr">2026-07-19 — Facilitator rail settles in WCSPR</H2>
+      <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-mut">
+        <li>
+          <strong className="text-white">Canonical wrapped-CSPR token.</strong> The official x402
+          (facilitator) rail now settles in <M>WCSPR</M> (Wrapped CSPR) — the canonical CEP-18 token
+          used by the make-software Casper x402 stack — instead of a bespoke test token. Buyers pay
+          with WCSPR minted 1:1 from CSPR on <M>testnet.cspr.trade</M>. Config-only change (the
+          <M>FACILITATOR_SERVICES</M> asset + EIP-712 domain); the native-CSPR rail is unchanged.
+        </li>
+      </ul>
+
       <H2 id="2026-07-18-v016">2026-07-18 — CLI v0.1.6</H2>
       <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-mut">
         <li>
           <strong className="text-white">Facilitator buy shows the token amount.</strong> On the
           facilitator (x402 v2) rail, <M>agentgate buy</M> and the MCP <M>agentgate_buy</M> tool now
-          print the real CEP-18 charge (e.g. <M>0.1 AGXUSD</M>) instead of the on-chain nominal CSPR
+          print the real CEP-18 charge (e.g. <M>0.1 WCSPR</M>) instead of the on-chain nominal CSPR
           price. Adds shared <M>formatUnits</M>/<M>formatToken</M> helpers; native-rail output is
           unchanged.
         </li>

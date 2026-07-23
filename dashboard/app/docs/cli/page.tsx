@@ -183,7 +183,7 @@ export default function Page() {
           [
             <M key="f3">--registry {'<hash>'}</M>,
             <M key="e3">REGISTRY_CONTRACT_PACKAGE_HASH</M>,
-            <span key="d3"><M>hash-10f92725…</M> (the deployed package)</span>,
+            <span key="d3"><M>hash-e09869a1…</M> (the deployed package)</span>,
             'all commands',
           ],
           [
@@ -644,8 +644,9 @@ export default function Page() {
       <P>
         <M>--pem</M> (or <M>BUYER_SIGNER_PEM_PATH</M>) supplies the <em>buyer</em> signer used only
         by <M>agentgate_buy</M> — the read tools ignore it, so <M>mcp</M> starts fine with no key.
-        On start the server prints a readiness line to <strong className="text-white">stderr</strong>
-        (v0.1.4); <M>stdout</M> is the JSON-RPC channel, so nothing else is ever written there.
+        On start the server prints a readiness line — including its real package version — to{' '}
+        <strong className="text-white">stderr</strong>; <M>stdout</M> is the JSON-RPC channel, so
+        nothing else is ever written there.
       </P>
       <H3 id="mcp-claude-desktop">Claude Desktop</H3>
       <P>

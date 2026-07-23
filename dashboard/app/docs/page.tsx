@@ -76,8 +76,10 @@ export default function Page() {
           <M>facilitator</M> (CSPR.cloud): a <strong className="text-white">CEP-18</strong> token moved
           by an <strong className="text-white">EIP-712</strong> authorization (x402 v2,{' '}
           <M>PAYMENT-SIGNATURE</M> header), with gas sponsored by the facilitator. CEP-18 has no
-          2.5-CSPR floor, so this rail supports true sub-CSPR micropayments. Either way the gateway
-          custodies nothing. See <DocLink href="/docs/deployment">Deploy</DocLink> and the{' '}
+          2.5-CSPR floor, so this rail supports true sub-CSPR micropayments. The live deployment
+          settles in <M>WCSPR</M> (Wrapped CSPR, mintable 1:1 from CSPR on <M>testnet.cspr.trade</M>),
+          though the rail accepts any CEP-18 token. Either way the gateway custodies nothing. See{' '}
+          <DocLink href="/docs/deployment">Deploy</DocLink> and the{' '}
           <DocLink href="/docs/changelog">changelog</DocLink>.
         </P>
       </Callout>
@@ -193,7 +195,7 @@ export default function Page() {
         (both enforced by config), plus the registry package hash set as{' '}
         <M>REGISTRY_CONTRACT_PACKAGE_HASH</M>. The <M>AgentGateRegistry</M> contract is LIVE on
         Casper Testnet (network <M>casper-test</M>) — package hash{' '}
-        <M>hash-10f92725551941ffe5be84cd340ce0f31f9f25d1f8ed959cc1a6c3383c3e27e9</M>. If{' '}
+        <M>hash-e09869a12ffcdbf58f53b3c7119b168beca5385a3f538415384a9ec80b9bf8df</M>. If{' '}
         <M>REGISTRY_CONTRACT_PACKAGE_HASH</M> is unset (e.g. a fresh checkout with no .env), the
         gateway falls back to <M>NOT_DEPLOYED</M> (503). See{' '}
         <DocLink href="/docs/contract">Smart contracts</DocLink>. These prerequisites apply only

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import useSWR from 'swr';
 import type { ActivityEvent } from '@agentgate/shared';
-import { addMotes, formatCspr } from '@agentgate/shared';
+import { addMotes, formatCspr, formatToken } from '@agentgate/shared';
 import { fetcher, isChainDown, isRateLimited } from '@/lib/fetcher';
 import { formatDateTime, formatInt, svcLabel, timeAgo } from '@/lib/format';
 import type { ActivityResponse } from '@/lib/api-types';
@@ -43,7 +43,11 @@ function StatTile({ label, value, sub }: { label: string; value: string; sub: st
 function Summary({ events }: { events: ActivityEvent[] }) {
   const payments = events.filter((e) => e.kind === 'payment');
   const attests = events.filter((e) => e.kind === 'attestation');
-  const volumeMotes = payments.reduce((sum, e) => addMotes(sum, e.amountMotes ?? '0'), '0');
+  // Native-CSPR volume only — token (WCSPR) payments carry the same 9-decimal
+  // scale but are a different asset, so summing them into a CSPR total would lie.
+  const volumeMotes = payments
+    .filter((e) => !e.assetSymbol)
+    .reduce((sum, e) => addMotes(sum, e.amountMotes ?? '0'), '0');
   const attestOk = attests.filter((e) => e.success !== false).length;
   const rate = attests.length ? Math.round((attestOk / attests.length) * 100) : null;
   const services = new Set(events.map((e) => e.serviceId).filter((id): id is number => id !== null)).size;
@@ -104,6 +108,44 @@ function Tabs({
   );
 }
 
+/* ── pager ───────────────────────────────────────────────────────────────── */
+
+/** Rows per page. Client-side over the already-fetched window (no extra CSPR.cloud reads). */
+const PAGE_SIZE = 15;
+
+function Pager({
+  page,
+  pageCount,
+  onPage,
+}: {
+  page: number;
+  pageCount: number;
+  onPage: (p: number) => void;
+}) {
+  if (pageCount <= 1) return null;
+  const btn =
+    'border border-line px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-mut transition-colors hover:border-mut/40 hover:text-zinc-300 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-line disabled:hover:text-mut';
+  return (
+    <nav aria-label="Activity pagination" className="flex items-center justify-between gap-3">
+      <button type="button" className={btn} onClick={() => onPage(page - 1)} disabled={page === 0}>
+        ‹ Prev
+      </button>
+      <span className="microlabel">
+        Page <span className="tabular-nums text-white">{page + 1}</span> /{' '}
+        <span className="tabular-nums text-white">{pageCount}</span>
+      </span>
+      <button
+        type="button"
+        className={btn}
+        onClick={() => onPage(page + 1)}
+        disabled={page >= pageCount - 1}
+      >
+        Next ›
+      </button>
+    </nav>
+  );
+}
+
 /* ── table ───────────────────────────────────────────────────────────────── */
 
 const HEADERS = ['Time', 'Type', 'Service', 'Event', 'Amount', 'Status', 'Tx'];
@@ -140,7 +182,15 @@ function Row({ event, network }: { event: ActivityEvent; network: string }) {
         </span>
       </td>
       <td className="whitespace-nowrap py-3 pr-4 text-right font-mono text-xs tabular-nums text-white">
-        {event.amountMotes ? formatCspr(event.amountMotes) : <span className="text-mut">—</span>}
+        {event.amountMotes ? (
+          event.assetSymbol ? (
+            formatToken(event.amountMotes, event.assetDecimals ?? 9, event.assetSymbol)
+          ) : (
+            formatCspr(event.amountMotes)
+          )
+        ) : (
+          <span className="text-mut">—</span>
+        )}
       </td>
       <td className="whitespace-nowrap py-3 pr-4">
         <span className="inline-flex items-center gap-1.5 text-[11px] text-mut">
@@ -200,6 +250,7 @@ function RateLimited() {
 /** /activity ledger — polls /api/activity (server-cached ~30 s). */
 export function ActivityFeed() {
   const [filter, setFilter] = useState<Kind | 'all'>('all');
+  const [page, setPage] = useState(0);
   const { data, error, isLoading } = useSWR<ActivityResponse>('/api/activity?limit=100', fetcher, {
     refreshInterval: 30000,
     keepPreviousData: true,
@@ -229,6 +280,14 @@ export function ActivityFeed() {
     service_registered: events.filter((e) => e.kind === 'service_registered').length,
   };
   const rows = filter === 'all' ? events : events.filter((e) => e.kind === filter);
+  // Client-side pagination over the fetched window. Clamp the page so a live refresh
+  // that shrinks the set (or a filter change) can never strand us past the last page.
+  const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount - 1);
+  const pagedRows = rows.slice(currentPage * PAGE_SIZE, currentPage * PAGE_SIZE + PAGE_SIZE);
+  const rangeStart = rows.length === 0 ? 0 : currentPage * PAGE_SIZE + 1;
+  const rangeEnd = Math.min(rows.length, currentPage * PAGE_SIZE + PAGE_SIZE);
+  const filterLabel = FILTERS.find((f) => f.id === filter)?.label.toLowerCase() ?? 'event';
 
   return (
     <div className="space-y-6">
@@ -257,7 +316,14 @@ export function ActivityFeed() {
           <Summary events={events} />
 
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <Tabs active={filter} counts={counts} onSelect={setFilter} />
+            <Tabs
+              active={filter}
+              counts={counts}
+              onSelect={(id) => {
+                setFilter(id);
+                setPage(0);
+              }}
+            />
             <p className="microlabel flex items-center gap-2">
               network <span className="text-white">{data.network}</span>
               <span className="text-line">·</span> polled every 5s
@@ -289,7 +355,7 @@ export function ActivityFeed() {
                     </td>
                   </tr>
                 ) : (
-                  rows.map((event, i) => (
+                  pagedRows.map((event, i) => (
                     <Row key={`${event.txHash}-${event.kind}-${i}`} event={event} network={data.network} />
                   ))
                 )}
@@ -297,10 +363,15 @@ export function ActivityFeed() {
             </table>
           </div>
 
+          <Pager page={currentPage} pageCount={pageCount} onPage={setPage} />
+
           <p className="text-xs text-mut">
-            Showing {formatInt(rows.length)}
-            {filter === 'all' ? '' : ` of ${formatInt(events.length)}`} event
-            {rows.length === 1 ? '' : 's'}
+            Showing{' '}
+            <span className="tabular-nums text-zinc-300">
+              {formatInt(rangeStart)}–{formatInt(rangeEnd)}
+            </span>{' '}
+            of {formatInt(rows.length)}
+            {filter === 'all' ? '' : ` ${filterLabel}`} event{rows.length === 1 ? '' : 's'}
             {events.length >= 100 ? ' (latest 100)' : ''}. Times are relative; hover for the exact
             timestamp. Every row links to its transaction on cspr.live.
           </p>
