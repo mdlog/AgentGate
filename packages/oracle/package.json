@@ -11,6 +11,6 @@
   },
   "dependencies": {
     "@agentgate/shared": "*",
-    "express": "^4.21.0"
+    "express": "^5.2.1"
   }
 }
