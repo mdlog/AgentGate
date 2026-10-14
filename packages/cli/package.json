@@ -53,7 +53,7 @@
     "@casper-ecosystem/casper-eip-712": "^1.2.1",
     "@ethersproject/bignumber": "^5.7.0",
     "@make-software/casper-x402": "^1.0.0",
-    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@modelcontextprotocol/sdk": "^1.31.0",
     "@noble/hashes": "^1.2.0",
     "@x402/core": "^2.19.0",
     "casper-js-sdk": "^5.0.12",
